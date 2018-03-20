@@ -1,4 +1,5 @@
 from datetime import datetime
+from settings import *
 import numpy as np
 import matplotlib.pyplot as plt
 
