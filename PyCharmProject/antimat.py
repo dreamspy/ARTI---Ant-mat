@@ -1,5 +1,7 @@
 from datetime import datetime
 import numpy as np
+import math
+from scipy.spatial import distance
 import matplotlib.pyplot as plt
 
 def nextState(x,a):
@@ -12,6 +14,16 @@ def crossOver(a1,a2):
     a = [0]
     a.append([((a1[i+1]-a1[i]) + (a2[i+1]-a2[i]))/2 for i in range(n-1)])
     return a
+
+def closest_node(node, nodes):
+    closest_index = distance.cdist([node], nodes).argmin()
+    return nodes[closest_index]
+
+def fitness(food, nodes):
+    closest = closest_node(food, nodes)
+    dist = math.sqrt((food[0]-closest[0])**2 + (food[1]-closest[1])**2)
+    score = 1/(1+dist)
+    return score
 
 #### INIT
 # number of steps
@@ -48,7 +60,13 @@ for j in range(N):
         x.append(nextState(x[i],A[j][i]))
     X.append(x)
 
+#fitness benchmarks
+F = []
+for j in range(N):
+    F.append(fitness([17,63],X[j]))
 
+print(F)
+print(sorted(F))
 
 #crossover test
 a1 = A[0]
