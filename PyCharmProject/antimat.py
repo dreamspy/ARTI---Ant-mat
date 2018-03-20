@@ -11,9 +11,9 @@ def column(matrix, i):
 
 #### INIT
 # number of steps
-n = 10
+n = 100
 # number of ants
-N = 5
+N = 100
 #environment
 xlim = 100
 ylim = 100
@@ -38,10 +38,10 @@ for j in range(N):
 
 #positions
 X = []
-x = [x0]
 for j in range(N):
+    x = [x0]
     for i in range(n):
-        x.append(nextState(X[j][i],A[j][i]))
+        x.append(nextState(x[i],A[j][i]))
     X.append(x)
 
 # print(X[0])
@@ -57,6 +57,8 @@ for j in range(N):
 # colors = np.random.rand(n)
 plt.scatter(column(X[0],0),column(X[0],1), marker='.')
 plt.scatter(column(X[1],0),column(X[1],1), marker='+')
+plt.scatter(column(X[2],0),column(X[2],1), marker='*')
+plt.scatter(column(X[3],0),column(X[3],1), marker='o')
 plt.ylabel('some numbers')
 # plt.xlim(-xlim,xlim)
 # plt.ylim(-ylim,ylim)
