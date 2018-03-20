@@ -1,4 +1,5 @@
 from datetime import datetime
+from settings import *
 import numpy as np
 
 def nextStep(x, a):
