@@ -8,6 +8,10 @@ def nextState(x,a):
 def column(matrix, i):
     return [row[i] for row in matrix]
 
+def crossOver(a1,a2):
+    a = [0]
+    a.append([((a1[i+1]-a1[i]) + (a2[i+1]-a2[i]))/2 for i in range(n-1)])
+    return a
 
 #### INIT
 # number of steps
@@ -15,8 +19,8 @@ n = 100
 # number of ants
 N = 100
 #environment
-xlim = 100
-ylim = 100
+xLength = 100
+yLength = 100
 #initial position and angle
 x0 = [0,0]
 a0 = 0
@@ -44,9 +48,16 @@ for j in range(N):
         x.append(nextState(x[i],A[j][i]))
     X.append(x)
 
-# print(X[0])
-# print("XXXXXXXXXXXXXXXXXXXXXX")
-# print(X[1])
+
+
+#crossover test
+a1 = A[0]
+a2 = A[1]
+a = crossOver(a1,a2)
+
+# x = [x0]
+# for i in range(n):
+#     x.append(nextState(x[i],a[i]))
 #### PLOTS
 #plot angle vector
 # plt.plot(a,'.')
@@ -56,12 +67,12 @@ for j in range(N):
 #plot route
 # colors = np.random.rand(n)
 plt.scatter(column(X[0],0),column(X[0],1), marker='.')
-plt.scatter(column(X[1],0),column(X[1],1), marker='+')
-plt.scatter(column(X[2],0),column(X[2],1), marker='*')
-plt.scatter(column(X[3],0),column(X[3],1), marker='o')
+plt.scatter(column(X[1],0),column(X[1],1), marker='.')
+plt.scatter(column(x,0),column(x,1), marker='*')
+# plt.scatter(column(X[3],0),column(X[3],1), marker='o')
 plt.ylabel('some numbers')
-# plt.xlim(-xlim,xlim)
-# plt.ylim(-ylim,ylim)
+plt.xlim(-xLength/2, xLength/2)
+plt.ylim(-yLength/2, yLength/2)
 plt.show()
 
 
