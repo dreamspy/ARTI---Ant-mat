@@ -1,6 +1,5 @@
 from datetime import datetime
 import numpy as np
-import matplotlib.pyplot as plt
 
 def nextStep(x, a):
     return [x[0] - stepSize*np.math.sin(a), x[1] + stepSize*np.math.cos(a)]
