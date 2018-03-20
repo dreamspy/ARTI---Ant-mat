@@ -1,3 +1,4 @@
+from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -10,7 +11,9 @@ def column(matrix, i):
 
 #### INIT
 # number of steps
-n = 300
+n = 10
+# number of ants
+N = 5
 #environment
 xlim = 100
 ylim = 100
@@ -25,17 +28,25 @@ maxAngChangePerStep = 3.14/10
 
 #### STATES
 #angle vector
-a = [a0]
-np.random.seed(42)
-for i in range(n):
-    a.append(a[-1] + maxAngChangePerStep*np.random.normal())
+A = []
+# np.random.seed()
+for j in range(N):
+    a = [a0]
+    for i in range(n):
+        a.append(a[-1] + maxAngChangePerStep*np.random.normal())
+    A.append(a)
 
 #positions
+X = []
 x = [x0]
-for i in range(n):
-    x.append(nextState(x[i],a[i]))
+for j in range(N):
+    for i in range(n):
+        x.append(nextState(X[j][i],A[j][i]))
+    X.append(x)
 
-
+# print(X[0])
+# print("XXXXXXXXXXXXXXXXXXXXXX")
+# print(X[1])
 #### PLOTS
 #plot angle vector
 # plt.plot(a,'.')
@@ -43,64 +54,13 @@ for i in range(n):
 # plt.show()
 
 #plot route
-plt.scatter(column(x,0),column(x,1))
+# colors = np.random.rand(n)
+plt.scatter(column(X[0],0),column(X[0],1), marker='.')
+plt.scatter(column(X[1],0),column(X[1],1), marker='+')
 plt.ylabel('some numbers')
 # plt.xlim(-xlim,xlim)
 # plt.ylim(-ylim,ylim)
 plt.show()
 
 
-"""
-=====
-Decay
-=====
-
-This example showcases a sinusoidal decay animation.
-"""
-
-
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-
-
-def data_gen(t=0):
-    cnt = 0
-    while cnt < 1000:
-        cnt += 1
-        t += 0.1
-        yield t, np.sin(2*np.pi*t) * np.exp(-t/10.)
-
-
-def init():
-    ax.set_ylim(-1.1, 1.1)
-    ax.set_xlim(0, 10)
-    del xdata[:]
-    del ydata[:]
-    line.set_data(xdata, ydata)
-    return line,
-
-fig, ax = plt.subplots()
-line, = ax.plot([], [], lw=2)
-ax.grid()
-xdata, ydata = [], []
-
-
-def run(data):
-    # update the data
-    t, y = data
-    xdata.append(t)
-    ydata.append(y)
-    xmin, xmax = ax.get_xlim()
-
-    if t >= xmax:
-        ax.set_xlim(xmin, 2*xmax)
-        ax.figure.canvas.draw()
-    line.set_data(xdata, ydata)
-
-    return line,
-
-ani = animation.FuncAnimation(fig, run, data_gen, blit=False, interval=10,
-                              repeat=False, init_func=init)
-plt.show()
 
