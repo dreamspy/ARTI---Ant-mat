@@ -102,3 +102,6 @@ ENV/
 
 # macos
 .DS_Store
+
+#pycharm
+workspace.xml
