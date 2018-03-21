@@ -56,14 +56,14 @@ def runTest():
 
     #plot route
     # colors = np.random.rand(n)
-    plt.scatter(column(X[0],0),column(X[0],1), marker='.')
-    plt.scatter(column(X[1],0),column(X[1],1), marker='.')
+    #plt.scatter(column(X[0],0),column(X[0],1), marker='.')
+    #plt.scatter(column(X[1],0),column(X[1],1), marker='.')
     # plt.scatter(column(x,0),column(x,1), marker='*')
     # plt.scatter(column(X[3],0),column(X[3],1), marker='o')
-    plt.ylabel('some numbers')
-    plt.xlim(-xLength/2, xLength/2)
-    plt.ylim(-yLength/2, yLength/2)
-    plt.show()
+    #plt.ylabel('some numbers')
+    #plt.xlim(-xLength/2, xLength/2)
+    #plt.ylim(-yLength/2, yLength/2)
+    #plt.show()
 
 
 if __name__ == "__main__":
