@@ -24,7 +24,7 @@ def randomAngles():
     for j in range(N):
         a = [a0]
         for i in range(n):
-            a.append(a[-1] + maxAngChangePerStep*np.random.normal())
+            a.append(a[-1] + maxAngChangePerStep*(np.random.normal() / 2))
         A.append(a)
     return A
 
