@@ -4,7 +4,7 @@ import time
 from datetime import datetime
 import numpy as np
 
-def rendera(index, width, height, tk, canvas, X, food, obs):
+def rendera(index, width, height, tk, canvas, X, food, obs, size):
     while index < len(X[1]):
         canvas.delete("all")
         #canvas.create_oval((width/2) - (width/30), (height/2) - (height/30), (width/2) + (width/30), (height/2) + (height/30), fill="brown")
@@ -12,9 +12,9 @@ def rendera(index, width, height, tk, canvas, X, food, obs):
         a = 0
         while a < len(obs):
             for i in obs[0]:
-                canvas.create_rectangle(i[0], i[1], i[0] + 200, i[1] + 5, fill="black")
+                canvas.create_rectangle(i[0], i[1], i[0] + size, i[1] + 5, fill="black")
             for i in obs[1]:
-                canvas.create_rectangle(i[0], i[1], i[0] + 5, i[1] + 200, fill="black")
+                canvas.create_rectangle(i[0], i[1], i[0] + 5, i[1] + size, fill="black")
             a += 1
         canvas.create_text(50, 50, font="13", text=index)
         for i in X:
@@ -29,27 +29,27 @@ def rendera(index, width, height, tk, canvas, X, food, obs):
         time.sleep(0.001)
         index += 1
 
-def obstacles(width, height, food, amountLong, amountTall):
+def obstacles(width, height, food, amountLong, amountTall, size):
     obs = []
     obsLong = []
     obsTall = []
     i = 0
     while i < amountLong:
-        x = np.random.random() * (width - 200)
-        y = np.random.random() * (height - 200)
-        while (x > food[0] and x < (food[0] + 200)) and (y > food[1] and y < (food[1] + 200)):
-            x = np.random.random() * (width - 200)
-            y = np.random.random() * (height - 200)
+        x = np.random.random() * (width - size)
+        y = np.random.random() * (height - size)
+        while (x > food[0] and x < (food[0] + size)) and (y > food[1] and y < (food[1] + size)):
+            x = np.random.random() * (width - size)
+            y = np.random.random() * (height - size)
         obj = [x, y]
         obsLong.append(obj)
         i += 1
     i = 0
     while i < amountTall:
-        x = np.random.random() * (width - 200)
-        y = np.random.random() * (height - 200)
-        while (x > food[0] and x < (food[0] + 200)) and (y > food[1] and y < (food[1] + 200)):
-            x = np.random.random() * (width - 200)
-            y = np.random.random() * (height - 200)
+        x = np.random.random() * (width - size)
+        y = np.random.random() * (height - size)
+        while (x > food[0] and x < (food[0] + size)) and (y > food[1] and y < (food[1] + size)):
+            x = np.random.random() * (width - size)
+            y = np.random.random() * (height - size)
         obj = [x, y]
         obsTall.append(obj)
         i += 1
