@@ -5,17 +5,14 @@ from render import *
 # import stateMachine
 
 def main():
-    tk = Tk()
-    canvas = Canvas(tk, width=800, height=600)
-    canvas.pack()
-    width = 800
-    height = 600
-    index = 0
     A = randomAngles()
     X = nextStates(A)
+    fx = np.random.random() * (width - 20)
+    fy = np.random.random() * (height - 20)
+    f = [fx, fy]
 
     while True:
-        rendera(index, width, height, tk, canvas, X)
+        rendera(index, width, height, tk, canvas, X, f)
         runTest()
 
 if __name__ == "__main__":

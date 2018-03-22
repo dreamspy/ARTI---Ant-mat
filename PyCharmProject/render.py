@@ -4,10 +4,11 @@ import time
 from datetime import datetime
 import numpy as np
 
-def rendera(index, width, height, tk, canvas, X):
+def rendera(index, width, height, tk, canvas, X, f):
     while index < len(X[1]):
         canvas.delete("all")
         #canvas.create_oval((width/2) - (width/30), (height/2) - (height/30), (width/2) + (width/30), (height/2) + (height/30), fill="brown")
+        canvas.create_oval(f[0], f[1], f[0] + 20, f[1] + 20, fill="brown")
         for i in X:
             if index < len(i):
                 x0 = i[index][0] + (width / 2)
