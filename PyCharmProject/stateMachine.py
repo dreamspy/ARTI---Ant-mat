@@ -34,6 +34,23 @@ def nextStates(A):
         X.append(getPath(A[i]))
     return X
 
+def closest_node(node, nodes):
+    closest_index = distance.cdist([node], nodes).argmin()
+    return nodes[closest_index]
+
+def fitness(food, nodes):
+    closest = closest_node(food, nodes)
+    dist = math.sqrt((food[0]-closest[0])**2 + (food[1]-closest[1])**2)
+    score = 1/(1+dist)
+    return score
+
+def fitnessAll(X):
+    F = []
+    for i in range(n):
+        F.append(fitness(food,nodes))
+
+
+
 def runTest():
     A = randomAngles()
     X = nextStates(A)
