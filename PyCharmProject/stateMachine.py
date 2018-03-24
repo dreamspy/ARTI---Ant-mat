@@ -1,6 +1,8 @@
 from datetime import datetime
+from scipy.spatial import distance
 from settings import *
 import numpy as np
+from debug import *
 
 def nextStep(x, a):
     return [x[0] - stepSize*np.math.sin(a), x[1] + stepSize*np.math.cos(a)]
@@ -14,17 +16,25 @@ def getPath(a):
 def column(matrix, i):
     return [row[i] for row in matrix]
 
-def crossOver(a1,a2):
-    a = [0]
-    a.append([((a1[i+1]-a1[i]) + (a2[i+1]-a2[i]))/2 for i in range(n-1)])
-    return a
+def crossOver(A1, A2):
+    # print("running crossover")
+    db("running crossover", [])
+    db("A1[0]",A1[0])
+    db("A2[0]",A2[0])
+
+    a = [(A1[0] + A2[0]) / 2]
+    db('a',a)
+    b = [((A1[i + 1] + A1[i]) + (A2[i + 1] - A2[i])) / 2  for i in range(n - 1)]
+    c = np.vstack((a,b))
+    # c=a
+    return c
 
 def randomAngles():
     A = []
     for j in range(N):
-        a = [a0]
+        a =  [3.14*np.random.uniform(-1,1,1)]
         for i in range(n):
-            a.append(a[-1] + maxAngChangePerStep*(np.random.normal() / 2))
+            a.append(a[-1] + maxAngChangePerStep*(np.random.uniform(-1,1,1)))
         A.append(a)
     return A
 
@@ -40,15 +50,55 @@ def closest_node(node, nodes):
 
 def fitness(food, nodes):
     closest = closest_node(food, nodes)
-    dist = math.sqrt((food[0]-closest[0])**2 + (food[1]-closest[1])**2)
+    dist = np.math.sqrt((food[0] - closest[0]) ** 2 + (food[1] - closest[1]) ** 2)
     score = 1/(1+dist)
     return score
 
-def fitnessAll(X):
+def fitnessAll(food,X):
     F = []
-    for i in range(n):
-        F.append(fitness(food,nodes))
+    fitness
+    for i in range(N):
+        F.append(fitness(food,X[i]))
+    return F
 
+def magnitude(v):
+    return np.math.sqrt(sum(v[i] * v[i] for i in range(len(v))))
+
+def normalize(v):
+    vSum = sum(v)
+    return [ v[i]/vSum  for i in range(len(v)) ]
+
+def isin(a,b):
+    aInv = [a[1],a[0]]
+    for i in range(len(b)):
+        if np.array_equal(a,b[i]):
+            return True
+        elif np.array_equal(aInv,b[i]):
+            return True
+    return False
+
+def newGen(A,F):
+    print("\nspawning New Gen:")
+    db("old A", A)
+    newA = []
+    parents = []
+    F = normalize(F)
+    for i in range(N):
+        pTemp = np.random.choice(N,2,p=F)
+        while pTemp[0] == pTemp[1]:
+            pTemp = np.random.choice(N,2,p=F)
+        while isin(pTemp,parents):
+            pTemp = np.random.choice(N,2,p=F)
+            while pTemp[0] == pTemp[1]:
+                pTemp = np.random.choice(N,2,p=F)
+        parents.append(pTemp)
+    print("parents: ",parents)
+    for i in range(N):
+        a = (crossOver(A[parents[i][0]],A[parents[i][1]]))
+        newA.append(a)
+    db("newA", newA)
+
+    return newA
 
 
 def runTest():
