@@ -12,38 +12,45 @@ def getPath(a):
     for i in range(n):
         x.append(nextStep(x[i], a[i]))
     return x
-
+#return column i from matrix
 def column(matrix, i):
     return [row[i] for row in matrix]
 
+#create child from parents
 def crossOver(A1, A2):
-    # print("running crossover")
-    db("running crossover", [])
-    db("A1[0]",A1[0])
-    db("A2[0]",A2[0])
-
+    #calculate child from averae of angles
     a = [(A1[0] + A2[0]) / 2]
-    db('a',a)
-    b = [((A1[i + 1] + A1[i]) + (A2[i + 1] - A2[i])) / 2  for i in range(n - 1)]
+    b = [((A1[i + 1] + A1[i]) + (A2[i + 1] - A2[i])) / 2 for i in range(n - 1)]
     c = np.vstack((a,b))
-    # c=a
-    return c
+    #add random factor
+    d = c + [randomFactor * x for x in randomAngleVector()]
+    return d
 
+#returns (1,N) dimensional random angle vector
+def randomAngleVector():
+    a =  [3.14*np.random.uniform(-1,1,1)]
+    for i in range(n-1):
+        a.append(a[-1] + maxAngChangePerStep*(np.random.uniform(-1,1,1)))
+    return a
+
+#returns (n,N) dimensional random angle array
 def randomAngles():
     A = []
     for j in range(N):
         a =  [3.14*np.random.uniform(-1,1,1)]
-        for i in range(n):
+        for i in range(n-1):
             a.append(a[-1] + maxAngChangePerStep*(np.random.uniform(-1,1,1)))
         A.append(a)
     return A
 
+#returns path from angles A
 def nextStates(A):
     X = []
     for i in range(N):
         X.append(getPath(A[i]))
     return X
 
+# return the closest node in "nodes", wrt "node"
 def closest_node(node, nodes):
     closest_index = distance.cdist([node], nodes).argmin()
     return nodes[closest_index]
@@ -54,9 +61,9 @@ def fitness(food, nodes):
     score = 1/(1+dist)
     return score
 
+#calculate fitness for all the dudes
 def fitnessAll(food,X):
     F = []
-    fitness
     for i in range(N):
         F.append(fitness(food,X[i]))
     return F
@@ -64,10 +71,12 @@ def fitnessAll(food,X):
 def magnitude(v):
     return np.math.sqrt(sum(v[i] * v[i] for i in range(len(v))))
 
+#normalize vector to have sum = 1
 def normalize(v):
     vSum = sum(v)
     return [ v[i]/vSum  for i in range(len(v)) ]
 
+#check if list a is in the "list of lists" b
 def isin(a,b):
     aInv = [a[1],a[0]]
     for i in range(len(b)):
@@ -77,27 +86,30 @@ def isin(a,b):
             return True
     return False
 
+#generate new gene pool
 def newGen(A,F):
-    print("\nspawning New Gen:")
+    # print("\nspawning New Gen:")
     db("old A", A)
     newA = []
     parents = []
     F = normalize(F)
+    #create parent pairs
     for i in range(N):
+        #select random parents
         pTemp = np.random.choice(N,2,p=F)
+        #make sure theyre note the same
         while pTemp[0] == pTemp[1]:
             pTemp = np.random.choice(N,2,p=F)
+        #make sure no pairs appear twice
         while isin(pTemp,parents):
             pTemp = np.random.choice(N,2,p=F)
             while pTemp[0] == pTemp[1]:
                 pTemp = np.random.choice(N,2,p=F)
         parents.append(pTemp)
-    print("parents: ",parents)
+    # generate new genes
     for i in range(N):
         a = (crossOver(A[parents[i][0]],A[parents[i][1]]))
         newA.append(a)
-    db("newA", newA)
-
     return newA
 
 

@@ -5,9 +5,9 @@ debug = False
 
 #### INIT
 # number of steps
-n = 300
+n = 400
 # number of ants
-N = 50
+N = 10
 # environment
 xLength = 100
 yLength = 100
@@ -17,7 +17,8 @@ x0 = [0, 0]
 stepSize = 1
 # maximum angle change per step
 maxAngChangePerStep = 3.14 / 10
-
+#random factor for child paths
+randomFactor = 0.01
 # Drawing settings
 tk = Tk()
 canvas = Canvas(tk, width=800, height=600)
