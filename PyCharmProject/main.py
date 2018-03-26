@@ -43,7 +43,7 @@ def main():
     while True:
         db('i',i)
         #draw
-        if i%drawEveryNFrames == 1:
+        if i%drawEveryNRuns == 1:
             rendera(index, width, height, tk, canvas, X, foodLocation, obs, foodSize)
 
         #calc fit

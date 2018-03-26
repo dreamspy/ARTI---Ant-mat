@@ -5,7 +5,8 @@ debug = True
 
 #### INIT
 ### Drawing settings
-drawEveryNFrames = 5
+drawEveryNRuns = 5
+drawEveryNFrames = 10
 tk = Tk()
 canvas = Canvas(tk, width=800, height=600)
 canvas.pack()
@@ -26,5 +27,4 @@ stepSize = 1
 maxAngChangePerStep = 3.14 / 10
 #random factor for child paths
 randomFactor = 0.05
-
 moveFoodEveryNFrames = 20
