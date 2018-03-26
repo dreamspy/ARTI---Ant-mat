@@ -5,9 +5,11 @@ from datetime import datetime
 import numpy as np
 from settings import *
 
-def rendera(index, width, height, tk, canvas, X, food, obs, size):
+def rendera(index, width, height, tk, canvas, X, food, obs, size, chrashed, ate):
     while index < len(X[1]):
         canvas.delete("all")
+        collisionObstacles(X, obs, chrashed, index, size)
+        collisionFood(X, ate, index, food)
         #canvas.create_oval((width/2) - (width/30), (height/2) - (height/30), (width/2) + (width/30), (height/2) + (height/30), fill="brown")
         canvas.create_oval(food[0], food[1], food[0] + 20, food[1] + 20, fill="brown")
         a = 0
@@ -18,16 +20,20 @@ def rendera(index, width, height, tk, canvas, X, food, obs, size):
                 canvas.create_rectangle(i[0], i[1], i[0] + 5, i[1] + size, fill="black")
             a += 1
         canvas.create_text(50, 50, font="13", text=index)
+        num = 0
         for i in X:
-            if index < len(i):
-                x0 = i[index][0]
-                y0 = i[index][1]
-                x1 = x0+5
-                y1 = y0+5
-            canvas.create_rectangle(x0, y0, x1, y1, fill="red")
-        #tk.update_idletasks()
+            if chrashed[num][0] == False:
+                if ate[num][0] == False:
+                    if index < len(i):
+                        x0 = i[index][0]
+                        y0 = i[index][1]
+                        x1 = x0+5
+                        y1 = y0+5
+                    canvas.create_rectangle(x0, y0, x1, y1, fill="red")
+            num += 1
+            #tk.update_idletasks()
         tk.update()
-        time.sleep(0.001)
+        time.sleep(0.01)
         index += drawEveryNFrames
 
 def obstacles(width, height, food, amountLong, amountTall, size):
@@ -59,4 +65,27 @@ def obstacles(width, height, food, amountLong, amountTall, size):
     if obsTall:
         obs.append(obsTall)
     return obs
+
+def collisionObstacles(X, obs, chrashed, index, size):
+    num = 0
+    for i in X:
+        for j in obs[0]:
+            if i[index][0] > j[0] and i[index][0] < j[0]+size and i[index][1] > j[1] and i[index][1] < j[1]+5:
+                chrashed[num] = [True, index]
+        for k in obs[1]:
+            if i[index][0] > k[0] and i[index][0] < k[0] + 5 and i[index][1] > k[1] and i[index][1] < k[1] + size:
+                chrashed[num] = [True, index]
+        num+=1
+
+    for i in chrashed:
+        print(i[1])
+
+def collisionFood(X, ate, index, food):
+    num = 0
+    for i in X:
+        if i[index][0] > food[0] and i[index][0] < food[0] + 20 and i[index][1] > food[1] and i[index][1] < food[1] + 20:
+            ate[num] = [True, index]
+        num+=1
+
+
 #DRAWINGS

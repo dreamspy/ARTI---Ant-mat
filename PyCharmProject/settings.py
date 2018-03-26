@@ -6,7 +6,7 @@ debug = True
 #### INIT
 ### Drawing settings
 drawEveryNRuns = 5
-drawEveryNFrames = 10
+drawEveryNFrames = 1
 tk = Tk()
 canvas = Canvas(tk, width=800, height=600)
 canvas.pack()

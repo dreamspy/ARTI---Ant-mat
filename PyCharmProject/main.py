@@ -32,11 +32,15 @@ def main():
     ####### Simulating all the ants
     A = randomAngles()
     X = pathsFromAngles(A)
+    obj = [False, 0]
+    chrashed = [obj]* len(X)
+    ate = [obj]* len(X)
+
     fx = np.random.random() * (width - 20)
     fy = np.random.random() * (height - 20)
     foodLocation = [fx, fy]
     foodSize = 200
-    obs = obstacles(width, height, foodLocation, 5, 5, foodSize)
+    obs = obstacles(width, height, foodLocation, 3, 3, foodSize)
     fitnessAll(foodLocation,X)
 
     i = 1
@@ -44,8 +48,10 @@ def main():
         db('i',i)
         #draw
         if i%drawEveryNRuns == 1:
-            rendera(index, width, height, tk, canvas, X, foodLocation, obs, foodSize)
+            rendera(index, width, height, tk, canvas, X, foodLocation, obs, foodSize, chrashed, ate)
 
+        chrashed = [obj] * len(X)
+        ate = [obj] * len(X)
         #calc fit
         F = fitnessAll(foodLocation,X)
         # db('F ', F)
