@@ -8,51 +8,57 @@ from render import *
 def main():
     ######## Simulating only two ants
     # while True:
-    #     A = randomAngles()
-    #     A[2] = A[0]
-    #     A[1] = A[0]
-    #     X = nextStates(A)
-    #     fx = np.random.random() * (width - 20)
-    #     fy = np.random.random() * (height - 20)
-    #     food = [fx, fy]
-    #     size = 200
-    #     obs = obstacles(width, height, food, 5, 5, size)
-    #     F = fitnessAll(food,X)
-    #     print('F',F)
-    #
-    #     rendera(index, width, height, tk, canvas, X, food, obs, size)
-    #     A[0] = crossOver(A[0],A[1])
-    #     A[1] = A[0]
-    #     A[2] = A[0]
-    #     X = nextStates(A)
-    #     rendera(index, width, height, tk, canvas, X, food, obs, size)
+        # A = randomAngles()
+        # A[2] = A[0]
+        # A[1] = A[0]
+        # X = pathsFromAngles(A)
+        # fx = 0
+        # fy = 0
+        # fx = np.random.random() * (width - 20)
+        # fy = np.random.random() * (height - 20)
+        # foodLocation = [fx, fy]
+        # foodSize = 200
+        # obs = obstacles(width, height, foodLocation, 5, 5, foodSize)
+        # F = fitnessAll(foodLocation,X)
+        # print('F',F)
+        # rendera(index, width, height, tk, canvas, X, foodLocation, obs, foodSize)
+        # A[0] = crossOver(A[0],A[1])
+        # A[1] = A[0]
+        # A[2] = A[0]
+        # X = pathsFromAngles(A)
+        # rendera(index, width, height, tk, canvas, X, foodLocation, obs, foodSize)
     # return
 
-    ######## Simulating all the ants
+    ####### Simulating all the ants
     A = randomAngles()
-    X = nextStates(A)
+    X = pathsFromAngles(A)
     fx = np.random.random() * (width - 20)
     fy = np.random.random() * (height - 20)
-    food = [fx, fy]
-    size = 200
-    obs = obstacles(width, height, food, 5, 5, size)
-    fitnessAll(food,X)
+    foodLocation = [fx, fy]
+    foodSize = 200
+    obs = obstacles(width, height, foodLocation, 5, 5, foodSize)
+    fitnessAll(foodLocation,X)
 
     i = 1
     while True:
-        print(i)
+        db('i',i)
         #draw
-        if i%5 == 0:
-            rendera(index, width, height, tk, canvas, X, food, obs, size)
+        if i%drawEveryNFrames == 1:
+            rendera(index, width, height, tk, canvas, X, foodLocation, obs, foodSize)
 
         #calc fit
-        F = fitnessAll(food,X)
-        db('F ', F)
+        F = fitnessAll(foodLocation,X)
+        # db('F ', F)
+        db("average fitness: ", np.mean(np.array(F)))
         #new gen
         A = newGen(A,F)
-        X = nextStates(A)
+        X = pathsFromAngles(A)
         if i == 1000: break
         i = i + 1
+        if i%moveFoodEveryNFrames == 0:
+            fx = np.random.random() * (width - 20)
+            fy = np.random.random() * (height - 20)
+            foodLocation = [fx, fy]
 
 
 if __name__ == "__main__":

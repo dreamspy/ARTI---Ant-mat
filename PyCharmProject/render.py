@@ -17,13 +17,14 @@ def rendera(index, width, height, tk, canvas, X, food, obs, size):
                 canvas.create_rectangle(i[0], i[1], i[0] + 5, i[1] + size, fill="black")
             a += 1
         canvas.create_text(50, 50, font="13", text=index)
-        for i in X:
-            if index < len(i):
-                x0 = i[index][0] + (width / 2)
-                y0 = i[index][1] + (height / 2)
-                x1 = x0+5
-                y1 = y0+5
-            canvas.create_rectangle(x0, y0, x1, y1, fill="red")
+        for i in range(len(X)):
+            if i%10 == 0:
+                if index < len(i):
+                    x0 = X[i][index][0]
+                    y0 = X[i][index][1]
+                    x1 = x0+5
+                    y1 = y0+5
+                canvas.create_rectangle(x0, y0, x1, y1, fill="red")
         #tk.update_idletasks()
         tk.update()
         time.sleep(0.001)

@@ -44,7 +44,7 @@ def randomAngles():
     return A
 
 #returns path from angles A
-def nextStates(A):
+def pathsFromAngles(A):
     X = []
     for i in range(N):
         X.append(getPath(A[i]))
@@ -89,7 +89,7 @@ def isin(a,b):
 #generate new gene pool
 def newGen(A,F):
     # print("\nspawning New Gen:")
-    db("old A", A)
+    # db("old A", A)
     newA = []
     parents = []
     F = normalize(F)
@@ -115,7 +115,7 @@ def newGen(A,F):
 
 def runTest():
     A = randomAngles()
-    X = nextStates(A)
+    X = pathsFromAngles(A)
 
     #crossover test
     a1 = A[0]
