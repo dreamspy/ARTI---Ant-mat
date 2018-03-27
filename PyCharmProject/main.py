@@ -3,8 +3,6 @@ from tkinter import *
 from stateMachine import *
 from render import *
 
-
-
 def main():
     ######## Simulating only two ants
     # while True:
@@ -40,18 +38,17 @@ def main():
     fy = np.random.random() * (height - 20)
     foodLocation = [fx, fy]
     foodSize = 200
-    obs = obstacles(width, height, foodLocation, 3, 3, foodSize)
+    obs = obstacles(width, height, foodLocation, 1, 1, foodSize)
     fitnessAll(foodLocation,X)
+    eaten = 0
 
     i = 1
     while True:
         db('i',i)
         #draw
         if i%drawEveryNRuns == 1:
-            rendera(index, width, height, tk, canvas, X, foodLocation, obs, foodSize, chrashed, ate)
+           eaten = rendera(index, width, height, tk, canvas, X, foodLocation, obs, foodSize, chrashed, ate, eaten)
 
-        chrashed = [obj] * len(X)
-        ate = [obj] * len(X)
         #calc fit
         F = fitnessAll(foodLocation,X)
         # db('F ', F)
@@ -59,12 +56,17 @@ def main():
         #new gen
         A = newGen(A,F)
         X = pathsFromAngles(A)
+
+        chrashed = [obj] * len(X)
+        ate = [obj] * len(X)
+
         if i == 1000: break
         i = i + 1
-        if i%moveFoodEveryNFrames == 0:
+        if eaten >= 2000:
             fx = np.random.random() * (width - 20)
             fy = np.random.random() * (height - 20)
             foodLocation = [fx, fy]
+            eaten = 0
 
 
 if __name__ == "__main__":

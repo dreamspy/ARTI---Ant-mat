@@ -5,13 +5,28 @@ from datetime import datetime
 import numpy as np
 from settings import *
 
-def rendera(index, width, height, tk, canvas, X, food, obs, size, chrashed, ate):
+def rendera(index, width, height, tk, canvas, X, food, obs, size, chrashed, ate, eaten):
     while index < len(X[1]):
         canvas.delete("all")
         collisionObstacles(X, obs, chrashed, index, size)
-        collisionFood(X, ate, index, food)
+        eaten = collisionFood(X, ate, index, food, eaten)
+
+        bla = 0
+
+        for i in ate:
+            if i[0] == True:
+                bla+=1
+
+
+        eaten = eaten+bla
+
+        foodsize = (50-eaten/100)/2
+
+        if foodsize <= 5:
+            foodsize = 5
+
         #canvas.create_oval((width/2) - (width/30), (height/2) - (height/30), (width/2) + (width/30), (height/2) + (height/30), fill="brown")
-        canvas.create_oval(food[0], food[1], food[0] + 20, food[1] + 20, fill="brown")
+        canvas.create_oval(food[0], food[1], food[0] + foodsize, food[1] + foodsize, fill="brown")
         a = 0
         while a < len(obs):
             for i in obs[0]:
@@ -35,6 +50,8 @@ def rendera(index, width, height, tk, canvas, X, food, obs, size, chrashed, ate)
         tk.update()
         time.sleep(0.01)
         index += drawEveryNFrames
+
+    return eaten
 
 def obstacles(width, height, food, amountLong, amountTall, size):
     obs = []
@@ -77,15 +94,14 @@ def collisionObstacles(X, obs, chrashed, index, size):
                 chrashed[num] = [True, index]
         num+=1
 
-    for i in chrashed:
-        print(i[1])
-
-def collisionFood(X, ate, index, food):
+def collisionFood(X, ate, index, food, eaten):
     num = 0
     for i in X:
         if i[index][0] > food[0] and i[index][0] < food[0] + 20 and i[index][1] > food[1] and i[index][1] < food[1] + 20:
             ate[num] = [True, index]
         num+=1
+
+    return eaten
 
 
 #DRAWINGS
