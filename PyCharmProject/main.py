@@ -1,6 +1,7 @@
 from settings import *
 from tkinter import *
 from stateMachine import *
+from environment import *
 from render import *
 
 def main():
@@ -31,6 +32,7 @@ def main():
     A = randomAngles()
     X = pathsFromAngles(A)
     obj = [False, 0]
+
     chrashed = [obj]* len(X)
     ate = [obj]* len(X)
 
@@ -42,9 +44,13 @@ def main():
     fitnessAll(foodLocation,X)
     eaten = 0
 
+
     i = 1
     while True:
         db('i',i)
+        collisionObstacles(X, obs, chrashed, foodSize)
+        eaten = collisionFood(X, ate, foodLocation, eaten)
+
         #draw
         if i%drawEveryNRuns == 1:
            eaten = rendera(index, width, height, tk, canvas, X, foodLocation, obs, foodSize, chrashed, ate, eaten)
