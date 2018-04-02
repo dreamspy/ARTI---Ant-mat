@@ -6,29 +6,43 @@ from render import *
 
 
 def main():
-    angularAcceleration = randomAngularAcceleration()
-    A = anglesFromAcceleration(angularAcceleration)
-    X = pathsFromAngles(A)
-    obj = [False, 0]
+    # angularAcceleration = randomAngularAcceleration()
+    # A = anglesFromAcceleration(angularAcceleration)
+    # X = pathsFromAngles(A)
+    # obj = [False, 0]
 
-    chrashed = [obj] * len(X)
-    ate = [obj] * len(X)
-
-    numberOfFoods = 5
-
-    foodLocations = [newFood(width, height,0) for i in range(numberOfFoods)]
-    foodSize = 200
-    obs = obstacles(width, height, foodLocations, 1, 1, foodSize, 0)
-    fitnessAll(foodLocations[0], X, ate, chrashed)
-    eaten = 0
-    foodLocation = foodLocations[0]
+    # chrashed = [obj] * len(X)
+    # ate = [obj] * len(X)
+    #
+    # numberOfFoods = 2
+    #
+    # foodLocations = [newFood(width, height,0) for i in range(numberOfFoods)]
+    # foodSize = 200
+    # obs = obstacles(width, height, foodLocations, 1, 1, foodSize, 0)
+    # fitnessAll(foodLocations[0], X, ate, chrashed)
+    # eaten = 0
+    # foodLocation = foodLocations[0]
 
 
 
 ################################3
-    testEnvs = [[i,[i+j for j in range(5)]] for i in range(10)]
+
+    numberOfFoods = 2
+    numberOfEnvs = 2
+    foodSize = 200
+
+    obj = [False, 0]
+    chrashed = [obj] * N
+    ate = [obj] * N
+    # fitnessAll(foodLocations[0], X, ate, chrashed)
+    eaten = 0
     counter = 0
+
+    testEnvs = [[i,[i+j for j in range(numberOfFoods)]] for i in range(numberOfEnvs)]
     for env in testEnvs:
+        angularAcceleration = randomAngularAcceleration()
+        A = anglesFromAcceleration(angularAcceleration)
+        X = pathsFromAngles(A)
         obsSeed = env[0]
         foodSeeds = env[1]
         foodLocations = [newFood(width,height, seed) for seed in foodSeeds]
@@ -67,6 +81,7 @@ def main():
                 db("eaten", eaten)
 
         counter += 1
+    db("\n==================\nNumber of Steps", nrOfSteps)
 
     return
     i = 0

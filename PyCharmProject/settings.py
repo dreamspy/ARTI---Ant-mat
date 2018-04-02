@@ -45,8 +45,12 @@ crossOverMethod = 1
 # -1= no random added
 # 0 = add random path to whole path
 # 1 = add random small turn at random location for all ants
-#     + add random drastic turn at random location for ants with probablility p
 randomMethod = 1
+
+# exploration factor
+# add random drastic turn at random location with probablility p
+explorationProbability = 0.01
+explorationVariance = 1.5
 
 # random method 0 settings
 # control amount of random path added in method 0

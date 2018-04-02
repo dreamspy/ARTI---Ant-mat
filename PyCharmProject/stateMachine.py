@@ -68,6 +68,14 @@ def crossOver(angAcc1, angAcc2):
         randomAcceleration = np.random.normal(0, normalVariance, 1)[0]
         c[turnLocation] += randomAcceleration
 
+    if explorationProbability > 0:
+        if np.random.uniform(0,1,1) < explorationProbability:
+            turnLocation = int(np.random.uniform(0, n, 1))
+            randomAcceleration = np.random.normal(0, explorationVariance, 1)[0]
+            c[turnLocation] += randomAcceleration
+
+
+
         # randomVector = randomFactor*maxAngChangePerStep*(np.random.uniform(-1,1,n))
 
         return c
