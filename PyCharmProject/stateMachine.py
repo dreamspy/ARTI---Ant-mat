@@ -220,32 +220,14 @@ def newAngGen(A, F):
         while pTemp[0] == pTemp[1]:
             pTemp = np.random.choice(N, 2, p=F)
         # make sure no pairs appear twice
-        while isIn(pTemp, parents):
-            pTemp = np.random.choice(N, 2, p=F)
-            while pTemp[0] == pTemp[1]:
-                pTemp = np.random.choice(N, 2, p=F)
+        # while isIn(pTemp, parents):
+        #     pTemp = np.random.choice(N, 2, p=F)
+        #     while pTemp[0] == pTemp[1]:
+        #         pTemp = np.random.choice(N, 2, p=F)
         parents.append(pTemp)
     # generate new genes
     for i in range(N):
         a = (crossOver(A[parents[i][0]], A[parents[i][1]]))
         newA.append(a)
     return newA
-
-if __name__ == "__main__":
-    #### INIT
-    # number of steps
-    n = 100
-    # number of ants
-    N = 100
-    #environment
-    xLength = 100
-    yLength = 100
-    #initial position and angle
-    x0 = [0,0]
-    a0 = 0
-    #length of each step
-    stepSize = 1
-    #maximum angle change per step
-    maxAngChangePerStep = 3.14/10
-    runTest()
 

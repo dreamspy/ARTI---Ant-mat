@@ -41,16 +41,19 @@ def main():
     #   probability of generating totally random ants
 
 
+               #crM raM expP expV r0fct r1var tranP
     policies = [
-                [1, 1, 0.00, 1.5, 0.5, 0.25, 0.01],
-                [1, 1, 0.01, 1.5, 0.5, 0.25, 0.01],
-                [2, 1, 0.01, 1.5, 0.5, 0.1, 0.01],
-                [3, 1, 0.01, 1.5, 0.5, 0.1, 0.01]
+                [1, 1, 0.01, 1.5, 0.5, 0.10, 0.01],
+                [1, 1, 0.03, 1.5, 0.5, 0.10, 0.01],
+                [1, 1, 0.05, 1.5, 0.5, 0.10, 0.01],
+                [1, 1, 0.01, 1.5, 0.5, 0.10, 0.01],
+                [1, 1, 0.01, 1.5, 0.5, 0.10, 0.03],
+                [1, 1, 0.01, 1.5, 0.5, 0.10, 0.05],
                 ]
 
     for policie in policies:
         print(policie)
-        print(testPolicie(policie))
+        testPolicie(policie)
 
 def testPolicie(policie):
     updateCrossoverSettings(policie)
@@ -61,10 +64,11 @@ def testPolicie(policie):
     eaten = 0
     counter = 0
 
-
     testEnvs = [[i, [i + j for j in range(numberOfFoods)]] for i in range(numberOfEnvs)]
 
 
+    envNr = 0
+    totalNrOfSteps = 0
     for env in testEnvs:
         angularSpeed = randomAngularSpeed()
         A = anglesFromSpeed(angularSpeed)
@@ -72,38 +76,54 @@ def testPolicie(policie):
         obsSeed = env[0]
         foodSeeds = env[1]
         foodLocations = [newFood(width, height, seed) for seed in foodSeeds]
-        obs = obstacles(width, height, foodLocations, 2, 3, foodSize, obsSeed)
+        obs = obstacles(width, height, foodLocations, 1, 1, obsSize, obsSeed)
         chrashed = [obj] * len(X)
         ate = [obj] * len(X)
 
         nrOfSteps = 0
-
+        foodNr = 0
         for foodLocation in foodLocations:
+            print("        rendering")
+            rendera(index, width, height, tk, canvas, X, foodLocation, obs, obsSize, chrashed, ate, eaten)
             eaten = 0
             chrashed = [obj] * len(X)
             ate = [obj] * len(X)
-            collisionObstacles(X, obs, chrashed, foodSize)
+            print("        collisionObstacles first")
+            collisionObstacles(X, obs, chrashed, obsSize)
+            print("        collisionFood first")
             eaten = collisionFood(X, ate, foodLocation, eaten)
             while eaten <= bitesPerFood:
-                collisionObstacles(X, obs, chrashed, foodSize)
+                print("        collision")
+                collisionObstacles(X, obs, chrashed, obsSize)
                 eaten = collisionFood(X, ate, foodLocation, eaten)
-                if nrOfSteps % drawEveryNRuns == 0:
-                    rendera(index, width, height, tk, canvas, X, foodLocation, obs, foodSize, chrashed, ate, eaten)
+                # if nrOfSteps % drawEveryNRuns == 0:
+                #     rendera(index, width, height, tk, canvas, X, foodLocation, obs, obsSize, chrashed, ate, eaten)
 
                 # calc fit
+                print("        fitness")
                 F = fitnessAll(foodLocation, X, ate, chrashed)
 
                 # new gen
+                print("        newAngGen")
                 angularSpeed = newAngGen(angularSpeed, F)
+                print("        calc A")
                 A = anglesFromSpeed(angularSpeed)
+                print("        cald X")
                 X = pathsFromAngles(A)
 
                 chrashed = [obj] * len(X)
                 ate = [obj] * len(X)
                 nrOfSteps += 1
+                totalNrOfSteps += 1
+                maxFit = np.max(F)
+                print("        finished while round")
+                if debug: print("    envNr: ", envNr,  " foodNr: ", foodNr , " eaten: ", '%3i' % eaten, " steps: ", '%3i' % nrOfSteps, " totalSteps: ", '%4i' % totalNrOfSteps, " maxFit: ", maxFit)
                 if nrOfSteps >= stepLimit:
                     print("number of steps reached limit, canceling")
                     return -1
+            foodNr += 1
+        envNr += 1
+    print("Total number of steps: ", totalNrOfSteps)
 
     return nrOfSteps
 
