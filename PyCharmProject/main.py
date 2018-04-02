@@ -17,7 +17,7 @@ def main():
     #   0 = average over angular acceleration
     #   1 = splice parents at random location
     #   2 = randomly weighted average
-    #   3 = average over angular acceleration
+    #   3 = average over angular speed
     #
     # randomMethod:
     #   -1 = no random added
@@ -66,8 +66,8 @@ def testPolicie(policie):
 
 
     for env in testEnvs:
-        angularAcceleration = randomAngularSpeed()
-        A = anglesFromSpeed(angularAcceleration)
+        angularSpeed = randomAngularSpeed()
+        A = anglesFromSpeed(angularSpeed)
         X = pathsFromAngles(A)
         obsSeed = env[0]
         foodSeeds = env[1]
@@ -94,8 +94,8 @@ def testPolicie(policie):
                 F = fitnessAll(foodLocation, X, ate, chrashed)
 
                 # new gen
-                angularAcceleration = newAngGen(angularAcceleration, F)
-                A = anglesFromSpeed(angularAcceleration)
+                angularSpeed = newAngGen(angularSpeed, F)
+                A = anglesFromSpeed(angularSpeed)
                 X = pathsFromAngles(A)
 
                 chrashed = [obj] * len(X)

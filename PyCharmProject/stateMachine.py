@@ -61,25 +61,25 @@ def crossOver(angSpeed1, angSpeed2):
     elif randomMethod == 1:
         # add random turn at random place
         turnLocation = int(np.random.uniform(0, n, 1))
-        randomAcceleration = np.random.normal(0, normalVariance, 1)[0]
-        c[turnLocation] += randomAcceleration
+        randomSpeed = np.random.normal(0, normalVariance, 1)[0]
+        c[turnLocation] += randomSpeed
 
     if explorationProbability > 0:
         if np.random.uniform(0,1,1) <= explorationProbability:
             turnLocation = int(np.random.uniform(0, n, 1))
-            randomAcceleration = np.random.normal(0, explorationVariance, 1)[0]
-            c[turnLocation] += randomAcceleration
+            randomSpeed = np.random.normal(0, explorationVariance, 1)[0]
+            c[turnLocation] += randomSpeed
 
     # p = np.random.uniform(0,0,1)
     if np.random.uniform(0,1,1)[0] <= totallyRandomProbability:
-        randomAcceleration = [0]
+        randomSpeed = [0]
         for i in range(n - 1):
-            randomAcceleration.append(maxAngChangePerStep * (np.random.uniform(-1, 1, 1)[0]))
+            randomSpeed.append(maxAngChangePerStep * (np.random.uniform(-1, 1, 1)[0]))
 
         for j in range(N):
             randomAngles = [0]
             for i in range(n - 1):
-                randomAngles.append(randomAcceleration[i] + randomAcceleration[i + 1])
+                randomAngles.append(randomSpeed[i] + randomSpeed[i + 1])
         return randomAngles
 
     return c
@@ -112,7 +112,7 @@ def pathsFromAngles(A):
     return X
 
 
-# input (n,N) dimensional angle acceleration array
+# input (n,N) dimensional angle speed array
 # returns (n,N) dimensional angle array
 def anglesFromSpeed(angularSpeed):
     A = []
