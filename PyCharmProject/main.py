@@ -18,7 +18,7 @@ def main():
     foodLocation = [fx, fy]
     foodSize = 200
     obs = obstacles(width, height, foodLocation, 1, 1, foodSize)
-    fitnessAll(foodLocation,X)
+    fitnessAll(foodLocation,X, ate, chrashed)
     eaten = 0
 
 
@@ -33,7 +33,7 @@ def main():
             rendera(index, width, height, tk, canvas, X, foodLocation, obs, foodSize, chrashed, ate, eaten)
 
         #calc fit
-        F = fitnessAll(foodLocation,X)
+        F = fitnessAll(foodLocation, X, ate, chrashed)
 
         #new gen
         angularAcceleration = newAngGen(angularAcceleration,F)

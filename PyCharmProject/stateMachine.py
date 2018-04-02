@@ -129,10 +129,20 @@ def fitness(food, nodes):
 
 
 # calculate fitness for all the dudes
-def fitnessAll(food, X):
+def fitnessAll(food,X,ate,chrashed):
     F = []
     for i in range(N):
-        F.append(fitness(food, X[i]))
+        path_bonus = 0
+        if ate[i][0]:
+            path_bonus += np.math.sqrt((width/2 - food[0])**2 + (height/2 - food[1])**2)/ate[i][1]
+        if chrashed[i][0]:
+            if not ate[i][0]:
+                F.append(0)
+                continue
+            if chrashed[i][1] < ate[i][1]:
+                F.append(0)
+                continue
+        F.append(fitness(food,X[i]) + path_bonus)
     return F
 
 
