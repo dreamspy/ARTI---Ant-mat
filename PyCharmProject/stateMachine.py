@@ -3,6 +3,10 @@ from scipy.spatial import distance
 from settings import *
 import numpy as np
 from debug import *
+from math import exp
+from math import floor
+from math import ceil
+
 
 def nextStep(x, a):
     return [x[0] - stepSize*np.math.sin(a), x[1] + stepSize*np.math.cos(a)]
@@ -16,14 +20,20 @@ def getPath(a):
 def column(matrix, i):
     return [row[i] for row in matrix]
 
+def pShape(X):
+    print(np.array(X).shape)
+
 #create child from parents
-def crossOver(A1, A2):
-    #calculate child from averae of angles
-    a = [(A1[0] + A2[0]) / 2]
-    b = [((A1[i + 1] + A1[i]) + (A2[i + 1] - A2[i])) / 2 for i in range(n - 1)]
-    c = np.vstack((a,b))
+def crossOver(angAcc1, angAcc2):
+    #calculate child from average angular acceleration
+    top = [(angAcc1[0] + angAcc2[0]) / 2]
+    bottom = [((angAcc1[i + 1] + angAcc1[i]) + (angAcc2[i + 1] - angAcc2[i])) / 2 for i in range(n - 1)]
+    c = np.concatenate((top,bottom))
+
     #add random factor
-    d = c + [randomFactor * x for x in randomAngleVector()]
+    randomVector = randomFactor*maxAngChangePerStep*(np.random.uniform(-1,1,n))
+    d = c + randomVector
+
     return d
 
 #returns (1,N) dimensional random angle vector
@@ -34,12 +44,12 @@ def randomAngleVector():
     return a
 
 #returns (n,N) dimensional random angle array
-def randomAngles():
+def randomAngularAcceleration():
     A = []
     for j in range(N):
-        a =  [3.14*np.random.uniform(-1,1,1)]
+        a =  [0]
         for i in range(n-1):
-            a.append(a[-1] + maxAngChangePerStep*(np.random.uniform(-1,1,1)))
+            a.append(maxAngChangePerStep*(np.random.uniform(-1,1,1)[0]))
         A.append(a)
     return A
 
@@ -50,11 +60,25 @@ def pathsFromAngles(A):
         X.append(getPath(A[i]))
     return X
 
+#input (n,N) dimensional angle acceleration array
+#returns (n,N) dimensional angle array
+def anglesFromAcceleration(angularAccelleration):
+    A = []
+    for j in range(N):
+        a = [0]
+        # a = [3.14 * np.random.uniform(-1, 1, 1)]
+        for i in range(n-1):
+            a.append(a[i] + angularAccelleration[j][i+1])
+        A.append(a)
+    return A
+
 # return the closest node in "nodes", wrt "node"
 def closest_node(node, nodes):
     closest_index = distance.cdist([node], nodes).argmin()
     return nodes[closest_index]
 
+#food: location of foods
+#nods: a path as a list of nodes
 def fitness(food, nodes):
     closest = closest_node(food, nodes)
     dist = np.math.sqrt((food[0] - closest[0]) ** 2 + (food[1] - closest[1]) ** 2)
@@ -112,6 +136,30 @@ def newGen(A,F):
         newA.append(a)
     return newA
 
+def newAngGen(A,F):
+    # print("\nspawning New Gen:")
+    # db("old A", A)
+    newA = []
+    parents = []
+    F = normalize(F)
+    #create parent pairs
+    for i in range(N):
+        #select random parents
+        pTemp = np.random.choice(N,2,p=F)
+        #make sure theyre note the same
+        while pTemp[0] == pTemp[1]:
+            pTemp = np.random.choice(N,2,p=F)
+        #make sure no pairs appear twice
+        while isin(pTemp,parents):
+            pTemp = np.random.choice(N,2,p=F)
+            while pTemp[0] == pTemp[1]:
+                pTemp = np.random.choice(N,2,p=F)
+        parents.append(pTemp)
+    # generate new genes
+    for i in range(N):
+        a = (crossOver(A[parents[i][0]],A[parents[i][1]]))
+        newA.append(a)
+    return newA
 
 def runTest():
     A = randomAngles()
