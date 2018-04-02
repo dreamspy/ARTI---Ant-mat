@@ -1,14 +1,22 @@
 import numpy as np
 
-def obstacles(width, height, food, amountLong, amountTall, size):
+
+def collideWithFood(x,y,foodLocations, size):
+    for foodLocation in foodLocations:
+        if (x > foodLocation[0] and x < (foodLocation[0] + size)) and (y > foodLocation[1] and y < (foodLocation[1] + size)):
+            return True
+    return False
+
+def obstacles(width, height, foodLocations, amountLong, amountTall, size, seed):
     obs = []
     obsLong = []
     obsTall = []
     i = 0
+    np.random.seed(seed)
     while i < amountLong:
         x = np.random.random() * (width - size)
         y = np.random.random() * (height - size)
-        while (x > food[0] and x < (food[0] + size)) and (y > food[1] and y < (food[1] + size)):
+        while collideWithFood(x,y,foodLocations, size):
             x = np.random.random() * (width - size)
             y = np.random.random() * (height - size)
         obj = [x, y]
@@ -18,7 +26,7 @@ def obstacles(width, height, food, amountLong, amountTall, size):
     while i < amountTall:
         x = np.random.random() * (width - size)
         y = np.random.random() * (height - size)
-        while (x > food[0] and x < (food[0] + size)) and (y > food[1] and y < (food[1] + size)):
+        while collideWithFood(x,y,foodLocations, size):
             x = np.random.random() * (width - size)
             y = np.random.random() * (height - size)
         obj = [x, y]
@@ -61,3 +69,10 @@ def collisionFood(X, ate, food, eaten):
         num+=1
 
     return eaten
+
+
+def newFood(width, height, seed):
+    np.random.seed(seed)
+    fx = np.random.random() * (width - 20)
+    fy = np.random.random() * (height - 20)
+    return [fx, fy]

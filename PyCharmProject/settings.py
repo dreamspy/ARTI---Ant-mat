@@ -6,8 +6,8 @@ debug = True
 
 #### INIT
 ### Drawing settings
-drawEveryNRuns = 5
-drawEveryNFrames = 5
+drawEveryNRuns = 3
+drawEveryNFrames = 10
 tk = Tk()
 width = 800
 height = 600
@@ -19,7 +19,7 @@ index = 0
 
 # number of steps
 # n = floor(2/3 * (height + width)/2 )
-n = 500
+n = 1000
 # number of ants
 N = 100
 # initial position and angle
@@ -44,7 +44,8 @@ crossOverMethod = 1
 # random method
 # -1= no random added
 # 0 = add random path to whole path
-# 1 = add random turn at random location
+# 1 = add random small turn at random location for all ants
+#     + add random drastic turn at random location for ants with probablility p
 randomMethod = 1
 
 # random method 0 settings
