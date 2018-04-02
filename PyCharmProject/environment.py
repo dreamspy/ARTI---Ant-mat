@@ -55,6 +55,7 @@ def collisionFood(X, ate, food, eaten):
             if i[index][0] > food[0] and i[index][0] < food[0] + 20 and i[index][1] > food[1] and i[index][1] < food[1] + 20:
                 if ate[num][0] == False:
                     ate[num] = [True, index]
+                    eaten+=1
             index+=1
         index = 0
         num+=1

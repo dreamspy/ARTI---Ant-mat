@@ -7,7 +7,7 @@ debug = True
 #### INIT
 ### Drawing settings
 drawEveryNRuns = 5
-drawEveryNFrames = 5
+drawEveryNFrames = 1
 tk = Tk()
 width = 800
 height = 600
