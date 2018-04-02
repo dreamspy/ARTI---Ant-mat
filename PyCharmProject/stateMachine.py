@@ -1,11 +1,7 @@
-from datetime import datetime
 from scipy.spatial import distance
 from settings import *
 import numpy as np
 from debug import *
-from math import exp
-from math import floor
-from math import ceil
 
 
 def nextStep(x, a):
@@ -29,37 +25,37 @@ def pShape(X):
 
 
 # create child from parents
-def crossOver(angAcc1, angAcc2):
+def crossOver(angSpeed1, angSpeed2):
     if crossOverMethod == 0:
-        # generate child using average angular acceleration change
-        top = [(angAcc1[0] + angAcc2[0]) / 2]
-        bottom = [((angAcc1[i + 1] + angAcc1[i]) + (angAcc2[i + 1] - angAcc2[i])) / 2 for i in range(n - 1)]
+        # generate child using average angular acceleration
+        top = [(angSpeed1[0] + angSpeed2[0]) / 2]
+        bottom = [((angSpeed1[i + 1] + angSpeed1[i]) + (angSpeed2[i + 1] - angSpeed2[i])) / 2 for i in range(n - 1)]
         c = np.concatenate((top, bottom))
 
     elif crossOverMethod == 1:
         # generate child using random splice
         spliceLocation = int(np.random.uniform(0, n, 1))
-        top = angAcc1[:spliceLocation]
-        bottom = angAcc2[spliceLocation:]
+        top = angSpeed1[:spliceLocation]
+        bottom = angSpeed2[spliceLocation:]
         c = np.concatenate((top, bottom))
 
     elif crossOverMethod == 2:
         # generate child using random weight
         w1 = np.random.uniform(0, 1, 1)[0]
         w2 = 1 - w1
-        c = [w1 * angAcc1[i] + w2 * angAcc2[i] for i in range(n)]
+        c = [w1 * angSpeed1[i] + w2 * angSpeed2[i] for i in range(n)]
 
     elif crossOverMethod == 3:
-        # generate child using average angular acceleration
-        c = [(angAcc1[i] + angAcc2[i]) / 2 for i in range(n)]
+        # generate child using average angular speed
+        c = [(angSpeed1[i] + angSpeed2[i]) / 2 for i in range(n)]
 
     else:
         # fallback
-        c = angAcc1
+        c = angSpeed1
 
     if randomMethod == 0:
         # add random path
-        randomVector = randomCrossOwerFactor * maxAngChangePerStep * (np.random.uniform(-1, 1, n))
+        randomVector = randomCrossOverFactor * maxAngChangePerStep * (np.random.uniform(-1, 1, n))
         c = c + randomVector
 
     elif randomMethod == 1:
@@ -69,16 +65,24 @@ def crossOver(angAcc1, angAcc2):
         c[turnLocation] += randomAcceleration
 
     if explorationProbability > 0:
-        if np.random.uniform(0,1,1) < explorationProbability:
+        if np.random.uniform(0,1,1) <= explorationProbability:
             turnLocation = int(np.random.uniform(0, n, 1))
             randomAcceleration = np.random.normal(0, explorationVariance, 1)[0]
             c[turnLocation] += randomAcceleration
 
+    # p = np.random.uniform(0,0,1)
+    if np.random.uniform(0,1,1)[0] <= totallyRandomProbability:
+        randomAcceleration = [0]
+        for i in range(n - 1):
+            randomAcceleration.append(maxAngChangePerStep * (np.random.uniform(-1, 1, 1)[0]))
 
+        for j in range(N):
+            randomAngles = [0]
+            for i in range(n - 1):
+                randomAngles.append(randomAcceleration[i] + randomAcceleration[i + 1])
+        return randomAngles
 
-        # randomVector = randomFactor*maxAngChangePerStep*(np.random.uniform(-1,1,n))
-
-        return c
+    return c
 
 
 # returns (1,N) dimensional random angle vector
@@ -90,7 +94,7 @@ def randomAngleVector():
 
 
 # returns (n,N) dimensional random angle array
-def randomAngularAcceleration():
+def randomAngularSpeed():
     A = []
     for j in range(N):
         a = [0]
@@ -110,13 +114,13 @@ def pathsFromAngles(A):
 
 # input (n,N) dimensional angle acceleration array
 # returns (n,N) dimensional angle array
-def anglesFromAcceleration(angularAccelleration):
+def anglesFromSpeed(angularSpeed):
     A = []
     for j in range(N):
         a = [0]
         # a = [3.14 * np.random.uniform(-1, 1, 1)]
         for i in range(n - 1):
-            a.append(a[i] + angularAccelleration[j][i + 1])
+            a.append(a[i] + angularSpeed[j][i + 1])
         A.append(a)
     return A
 
@@ -226,38 +230,6 @@ def newAngGen(A, F):
         a = (crossOver(A[parents[i][0]], A[parents[i][1]]))
         newA.append(a)
     return newA
-
-
-def runTest():
-    A = randomAngles()
-    X = pathsFromAngles(A)
-
-    # crossover test
-    a1 = A[0]
-    a2 = A[1]
-    a = crossOver(a1, a2)
-
-    # generate next gen
-    # F = fitness(A)
-    # select random 100 pairs
-    # generate children
-
-    #### PLOTS
-    # plot angle vector
-    # plt.plot(a,'.')
-    # plt.ylabel('some numbers')
-    # plt.show()
-
-    # plot route
-    # colors = np.random.rand(n)
-    # plt.scatter(column(X[0],0),column(X[0],1), marker='.')
-    # plt.scatter(column(X[1],0),column(X[1],1), marker='.')
-    # plt.scatter(column(x,0),column(x,1), marker='*')
-    # plt.scatter(column(X[3],0),column(X[3],1), marker='o')
-    # plt.ylabel('some numbers')
-    # plt.xlim(-xLength/2, xLength/2)
-    # plt.ylim(-yLength/2, yLength/2)
-    # plt.show()
 
 if __name__ == "__main__":
     #### INIT
