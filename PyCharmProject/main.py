@@ -38,22 +38,66 @@ def main():
     #   variance of random turn size in random method 1
     #
     # totallyRandomProbability:
-    #   probability of generating totally random ants
+    #   probability of generating a totally random ant during crossOver
 
 
                #crM raM expP expV r0fct r1var tranP
     policies = [
-                [1, 1, 0.01, 1.5, 0.5, 0.10, 0.01],
-                [1, 1, 0.03, 1.5, 0.5, 0.10, 0.01],
-                [1, 1, 0.05, 1.5, 0.5, 0.10, 0.01],
-                [1, 1, 0.01, 1.5, 0.5, 0.10, 0.01],
-                [1, 1, 0.01, 1.5, 0.5, 0.10, 0.03],
-                [1, 1, 0.01, 1.5, 0.5, 0.10, 0.05],
+                [1, 1, 0.05, 0.25, 0.5, 0.05, 0.05],
+                [1, 1, 0.05, 0.50, 0.5, 0.05, 0.05],
+                [1, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [1, 1, 0.05, 3.00, 0.5, 0.05, 0.05],
                 ]
 
+    policies2 = [
+                [2, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [2, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [2, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [2, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [2, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [2, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [2, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [2, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [2, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [2, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+    ]
+    policies1 = [
+                [1, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [1, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [1, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [1, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [1, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [1, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [1, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [1, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [1, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                [1, 1, 0.05, 1.50, 0.5, 0.05, 0.05],
+                ]
+
+    print("2 obstacles")
+    print("Policie")
     for policie in policies:
         print(policie)
         testPolicie(policie)
+
+    print("Policie1")
+    score = 0
+    for policie in policies1:
+        print(policie)
+        score += stestPolicie(policie)
+        average = score / len(policies1)
+    print("Average score = ", average)
+
+    print("Policie2")
+    score = 0
+    for policie in policies2:
+        print(policie)
+        score += stestPolicie(policie)
+        average = score / len(policies1)
+    print("Average score = ", average)
+
+    return
+
 
 def testPolicie(policie):
     updateCrossoverSettings(policie)
@@ -76,39 +120,39 @@ def testPolicie(policie):
         obsSeed = env[0]
         foodSeeds = env[1]
         foodLocations = [newFood(width, height, seed) for seed in foodSeeds]
-        obs = obstacles(width, height, foodLocations, 1, 1, obsSize, obsSeed)
+        obs = obstacles(width, height, foodLocations, nrOfHorizObstacles, nrOfVertObstacles, obsSize, obsSeed)
         chrashed = [obj] * len(X)
         ate = [obj] * len(X)
 
         nrOfSteps = 0
         foodNr = 0
         for foodLocation in foodLocations:
-            print("        rendering")
+            # print("        rendering")
             rendera(index, width, height, tk, canvas, X, foodLocation, obs, obsSize, chrashed, ate, eaten)
             eaten = 0
             chrashed = [obj] * len(X)
             ate = [obj] * len(X)
-            print("        collisionObstacles first")
+            # print("        collisionObstacles first")
             collisionObstacles(X, obs, chrashed, obsSize)
-            print("        collisionFood first")
+            # print("        collisionFood first")
             eaten = collisionFood(X, ate, foodLocation, eaten)
             while eaten <= bitesPerFood:
-                print("        collision")
+                # print("        collision")
                 collisionObstacles(X, obs, chrashed, obsSize)
                 eaten = collisionFood(X, ate, foodLocation, eaten)
                 # if nrOfSteps % drawEveryNRuns == 0:
                 #     rendera(index, width, height, tk, canvas, X, foodLocation, obs, obsSize, chrashed, ate, eaten)
 
                 # calc fit
-                print("        fitness")
+                # print("        fitness")
                 F = fitnessAll(foodLocation, X, ate, chrashed)
 
                 # new gen
-                print("        newAngGen")
+                # print("        newAngGen")
                 angularSpeed = newAngGen(angularSpeed, F)
-                print("        calc A")
+                # print("        calc A")
                 A = anglesFromSpeed(angularSpeed)
-                print("        cald X")
+                # print("        cald X")
                 X = pathsFromAngles(A)
 
                 chrashed = [obj] * len(X)
@@ -116,11 +160,12 @@ def testPolicie(policie):
                 nrOfSteps += 1
                 totalNrOfSteps += 1
                 maxFit = np.max(F)
-                print("        finished while round")
-                if debug: print("    envNr: ", envNr,  " foodNr: ", foodNr , " eaten: ", '%3i' % eaten, " steps: ", '%3i' % nrOfSteps, " totalSteps: ", '%4i' % totalNrOfSteps, " maxFit: ", maxFit)
+                # print("        finished while round")
+                # if debug: print("    envNr: ", envNr,  " foodNr: ", foodNr , " eaten: ", '%3i' % eaten, " steps: ", '%3i' % nrOfSteps, " totalSteps: ", '%4i' % totalNrOfSteps, " maxFit: ", maxFit)
                 if nrOfSteps >= stepLimit:
                     print("number of steps reached limit, canceling")
                     return -1
+            # if debug: print("    envNr: ", envNr,  " foodNr: ", foodNr , " steps: ", '%3i' % nrOfSteps, " totalSteps: ", '%4i' % totalNrOfSteps)
             foodNr += 1
         envNr += 1
     print("Total number of steps: ", totalNrOfSteps)

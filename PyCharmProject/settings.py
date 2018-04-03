@@ -16,6 +16,8 @@ canvas.pack()
 index = 0
 
 ### Simulation settings
+nrOfHorizObstacles = 1
+nrOfVertObstacles = 1
 
 # number of steps
 # n = floor(2/3 * (height + width)/2)
