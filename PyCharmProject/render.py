@@ -8,7 +8,6 @@ def rendera(index, width, height, tk, canvas, X, food, obs, size, chrashed, ate,
     while index < len(X[1]):
         canvas.delete("all")
 
-        #canvas.create_oval((width/2) - (width/30), (height/2) - (height/30), (width/2) + (width/30), (height/2) + (height/30), fill="brown")
         canvas.create_oval(food[0], food[1], food[0] + 20, food[1] + 20, fill="brown")
         a = 0
         while a < len(obs):
@@ -43,7 +42,6 @@ def rendera(index, width, height, tk, canvas, X, food, obs, size, chrashed, ate,
                 canvas.create_rectangle(x0, y0, x1, y1, fill="red")
 
             num += 1
-            #tk.update_idletasks()
         tk.update()
         time.sleep(0.01)
         index += drawEveryNFrames

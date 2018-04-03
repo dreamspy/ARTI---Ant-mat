@@ -4,16 +4,16 @@ import numpy as np
 from debug import *
 
 
+# returns point in direction a from point x
 def nextStep(x, a):
     return [x[0] - stepSize * np.math.sin(a), x[1] + stepSize * np.math.cos(a)]
 
-
+# creates path in 2-D coordinates from series of angle steps
 def getPath(a):
     x = [x0]
     for i in range(n):
         x.append(nextStep(x[i], a[i]))
     return x
-
 
 # return column i from matrix
 def column(matrix, i):
@@ -22,7 +22,6 @@ def column(matrix, i):
 
 def pShape(X):
     print(np.array(X).shape)
-
 
 # create child from parents
 def crossOver(angSpeed1, angSpeed2):
@@ -65,13 +64,14 @@ def crossOver(angSpeed1, angSpeed2):
         c[turnLocation] += randomSpeed
 
     if explorationProbability > 0:
+        # randomly takes a drastic turn with given probability
         if np.random.uniform(0,1,1) <= explorationProbability:
             turnLocation = int(np.random.uniform(0, n, 1))
             randomSpeed = np.random.normal(0, explorationVariance, 1)[0]
             c[turnLocation] += randomSpeed
 
-    # p = np.random.uniform(0,0,1)
     if np.random.uniform(0,1,1)[0] <= totallyRandomProbability:
+        # returns a totally random ant with given probability
         randomSpeed = [0]
         for i in range(n - 1):
             randomSpeed.append(maxAngChangePerStep * (np.random.uniform(-1, 1, 1)[0]))
@@ -84,14 +84,12 @@ def crossOver(angSpeed1, angSpeed2):
 
     return c
 
-
 # returns (1,N) dimensional random angle vector
 def randomAngleVector():
     a = [3.14 * np.random.uniform(-1, 1, 1)]
     for i in range(n - 1):
         a.append(a[-1] + maxAngChangePerStep * (np.random.uniform(-1, 1, 1)))
     return a
-
 
 # returns (n,N) dimensional random angle array
 def randomAngularSpeed():
@@ -102,7 +100,6 @@ def randomAngularSpeed():
             a.append(maxAngChangePerStep * (np.random.uniform(-1, 1, 1)[0]))
         A.append(a)
     return A
-
 
 # returns path from angles A
 def pathsFromAngles(A):
@@ -124,12 +121,10 @@ def anglesFromSpeed(angularSpeed):
         A.append(a)
     return A
 
-
 # return the closest node in "nodes", wrt "node"
 def closest_node(node, nodes):
     closest_index = distance.cdist([node], nodes).argmin()
     return nodes[closest_index]
-
 
 # food: location of foods
 # nods: a path as a list of nodes
@@ -138,7 +133,6 @@ def fitness(food, nodes):
     dist = np.math.sqrt((food[0] - closest[0]) ** 2 + (food[1] - closest[1]) ** 2)
     score = 1 / (1 + dist)
     return score
-
 
 # calculate fitness for all the dudes
 def fitnessAll(food,X,ate,chrashed):
@@ -157,16 +151,17 @@ def fitnessAll(food,X,ate,chrashed):
         F.append(fitness(food,X[i]) + path_bonus)
     return F
 
-
+# calculate magnitute of vector (length)
 def magnitude(v):
     return np.math.sqrt(sum(v[i] * v[i] for i in range(len(v))))
-
 
 # normalize vector to have sum = 1
 def normalize(v):
     vSum = sum(v)
+    if vSum == 0:
+        v = np.ones(len(v))
+        vSum = len(v)
     return [v[i] / vSum for i in range(len(v))]
-
 
 # check if list a is in the "list of lists" b
 def isIn(a, b):
@@ -178,34 +173,33 @@ def isIn(a, b):
             return True
     return False
 
+# generate new gene pool from old gene pool and fitness results
+# def newGen(A, F):
+#     # print("\nspawning New Gen:")
+#     # db("old A", A)
+#     newA = []
+#     parents = []
+#     F = normalize(F)
+#     # create parent pairs
+#     for i in range(N):
+#         # select random parents
+#         pTemp = np.random.choice(N, 2, p=F)
+#         # make sure theyre note the same
+#         while pTemp[0] == pTemp[1]:
+#             pTemp = np.random.choice(N, 2, p=F)
+#         # make sure no pairs appear twice
+#         while isIn(pTemp, parents):
+#             pTemp = np.random.choice(N, 2, p=F)
+#             while pTemp[0] == pTemp[1]:
+#                 pTemp = np.random.choice(N, 2, p=F)
+#         parents.append(pTemp)
+#     # generate new genes
+#     for i in range(N):
+#         a = (crossOver(A[parents[i][0]], A[parents[i][1]]))
+#         newA.append(a)
+#     return newA
 
-# generate new gene pool
-def newGen(A, F):
-    # print("\nspawning New Gen:")
-    # db("old A", A)
-    newA = []
-    parents = []
-    F = normalize(F)
-    # create parent pairs
-    for i in range(N):
-        # select random parents
-        pTemp = np.random.choice(N, 2, p=F)
-        # make sure theyre note the same
-        while pTemp[0] == pTemp[1]:
-            pTemp = np.random.choice(N, 2, p=F)
-        # make sure no pairs appear twice
-        while isIn(pTemp, parents):
-            pTemp = np.random.choice(N, 2, p=F)
-            while pTemp[0] == pTemp[1]:
-                pTemp = np.random.choice(N, 2, p=F)
-        parents.append(pTemp)
-    # generate new genes
-    for i in range(N):
-        a = (crossOver(A[parents[i][0]], A[parents[i][1]]))
-        newA.append(a)
-    return newA
-
-
+# generate new gene pool from old gene pool and fitness results
 def newAngGen(A, F):
     # print("\nspawning New Gen:")
     # db("old A", A)

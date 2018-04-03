@@ -1,13 +1,13 @@
 from tkinter import *
 from math import floor
 
-debug = True
-# debug = False
+# debug = True
+debug = False
 
 #### INIT
 ### Drawing settings
-drawEveryNRuns = 1
-drawEveryNFrames = 30
+drawEveryNRuns = 5
+drawEveryNFrames = 20
 tk = Tk()
 width = 800
 height = 600
@@ -16,26 +16,32 @@ canvas.pack()
 index = 0
 
 ### Simulation settings
-nrOfHorizObstacles = 1
-nrOfVertObstacles = 1
+# nr of generated obstacles
+nrOfHorizObstacles = 2
+nrOfVertObstacles = 2
 
-# number of steps
-# n = floor(2/3 * (height + width)/2)
+# n: number of steps
 n = 1500
-# number of ants
+# N: number of ants
 N = 100
-# initial position and angle
+# x0: initial position and angle
 x0 = [width / 2, height / 2]
-# length of each step
+# stepSize: length of each step
 stepSize = 1
 # maximum angle change per step
 maxAngChangePerStep = 3.14 / 10
-# step limit for every run of a environment
-stepLimit = 200
+# step limit for every simulation of an environment
+stepLimit = 300
+# step limit for every simulation of food location until resetting population to random
+maxNrOfStepsPerFood = 50
 
 ### Food Settings
+#number of foods per environment
 numberOfFoods = 5
+#number of environments per simulation
 numberOfEnvs = 10
+#obstacle size
 obsSize = 200
+#nr of ants that  need to reach food until depleted
 bitesPerFood = 100
 
